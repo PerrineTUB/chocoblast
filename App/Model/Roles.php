@@ -2,6 +2,7 @@
 
     namespace App\Model;
     use App\Utils\BddConnect;
+    
     class Roles extends BddConnect{
         private $id_roles;
         private $nom_roles;
