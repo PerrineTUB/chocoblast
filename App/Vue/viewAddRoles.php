@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page erreur</title>
+    <title>Document</title>
 </head>
 <body>
-    <h1>Error 404 la page n'existe pas</h1>
-    <?php //phpinfo(); ?>
+    <form action="" method="POST">
+        <input type="text" name="nom_roles">
+        <input type="submit" value="Ajouter" name="submit">
+    </form>
 </body>
 </html>

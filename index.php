@@ -2,7 +2,11 @@
     //Il y a des include parce que ce n'est pas une classe
     //Importer les ressources 
     use App\controller\UserController;
+    use App\controller\RolesController;
     include './App/Utils/BddConnect.php';
+    include './App/Utils/Fonctions.php';
+    include './App/Model/Roles.php';
+    include './App/Controller/RolesController.php';
     include './App/Model/Utilisateur.php';
     include './App/Controller/UserController.php';
 
@@ -14,6 +18,7 @@
 
     //instance des controllers
     $userController = new UserController();
+    $rolesController = new RolesController();
 
     //routeur
     switch ($path) {
@@ -22,6 +27,9 @@
             break;
         case '/chocoblast/userAdd':
             $userController->insertUser();
+            break;
+        case '/chocoblast/rolesAdd':
+            $rolesController->addRoles();
             break;
         default:
             include './App/Vue/error.php';

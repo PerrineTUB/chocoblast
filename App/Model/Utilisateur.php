@@ -42,19 +42,19 @@
         }
 
         // SETTER
-        public function setNomUtilisateur($name):void{
+        public function setNomUtilisateur(?string $name):void{
             $this->nom_utilisateur = $name;
         }
 
-        public function setPrenomUtilisateur($firstName):void{
+        public function setPrenomUtilisateur(?string $firstName):void{
             $this->prenom_utilisateur = $firstName;
         }
 
-        public function setMailUtilisateur($mail):void{
+        public function setMailUtilisateur(?string $mail):void{
             $this->mail_utilisateur = $mail;
         }
 
-        public function setPasswordUtilisateur($pwd):void{
+        public function setPasswordUtilisateur(?string $pwd):void{
             $this->password_utilisateur = $pwd;
         }
 
@@ -83,8 +83,28 @@
             catch(\Exception $e){
                 die('Erreur : ' . $e->getMessage());
             }
-            
+        }
 
+        //Méthode pour récupérer un utilisateur avec son mail
+        public function getUserByMail():?array{
+            try{
+                $mail = $this->mail_utilisateur;
+
+                $req = $this->connexion()->prepare ('SELECT id_utilisateur,nom_utilisateur, prenom_utilisateur, mail_utilisateur, password_utilisateur, image_utilisateur, statut_utilisateur, id_roles FROM utilisateur WHERE mail_utilisateur = ?');
+
+                $req->bindParam(1, $mail, \PDO::PARAM_STR);
+
+                $req->execute();
+
+                $data = $req->fetchAll(\PDO::FETCH_OBJ);
+                return $data;
+            }
+            //Anti-slash avant Execption car je veux utiliser une classe qui est à l'extérieur de ce fichier comme au dessus avec PDO
+            catch (\Exception $e){
+                die('Erreur : ' . $e->getMessage());
+            }
+            
+            
         }
         
 

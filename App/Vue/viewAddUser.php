@@ -22,8 +22,9 @@
 
         <label for="password_utilisateur">Saisir votre mot de passe</label>
         <input type="password" name="password_utilisateur">
-        
+
         <input type="submit" value="Ajouter" name="submit">
     </form>
+    <div id="error"><?php echo $msg; ?></div>
 </body>
 </html>
