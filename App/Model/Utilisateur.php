@@ -17,7 +17,9 @@
         // CONSTRUCTEUR
         public function __construct(){
             //Instancier un objet roles quand on va créer un utilisateur. Vérrouiller le role sur utilisateur. Ils seront toujours utilisateurs. 
-            //$this->roles = new Roles('utilisateur');
+            $this->roles = new Roles();
+            $this->roles->setNomRoles('User');
+            $this->roles->setIdRoles(2);
         }
 
         // GETTER
@@ -67,15 +69,17 @@
                 $prenom = $this->prenom_utilisateur;
                 $mail = $this->mail_utilisateur;
                 $password = $this->password_utilisateur;
+                $id= $this->roles->getIdRoles();
 
                 //Préparer la requête
-                $req = $this->connexion()->prepare('INSERT INTO utilisateur(nom_utilisateur, prenom_utilisateur, mail_utilisateur, password_utilisateur) VALUES (?,?,?,?);');
+                $req = $this->connexion()->prepare('INSERT INTO utilisateur(nom_utilisateur, prenom_utilisateur, mail_utilisateur, password_utilisateur, id_roles) VALUES (?,?,?,?,?)');
 
                 //Bind les paramètres
                 $req->bindParam(1, $nom, \PDO::PARAM_STR);
                 $req->bindParam(2, $prenom, \PDO::PARAM_STR);
                 $req->bindParam(3, $mail, \PDO::PARAM_STR);
                 $req->bindParam(4, $password, \PDO::PARAM_STR);
+                $req->bindParam(5, $id, \PDO::PARAM_INT);
 
                 //Executer la requête
                 $req->execute();
