@@ -38,7 +38,12 @@ class ChocoblastController extends Chocoblast{
     }
 
     public function showAllChocoblast(){
-        include './App/Vue/viewAllChocoblast.php';
+        $msg = "";
+        $chocos = $this->getChocoblastAll();
+        if($chocos){
+            $msg = "Il n'y a rien.";
+        }
+        include './App/Vue/showAllChocoblast.php';
     }
 
 

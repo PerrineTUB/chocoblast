@@ -102,9 +102,13 @@
             }
         }
 
-        public function getChocoblastAll():array{
+        public function getChocoblastAll():?array{
             try{
-                $req = $this->connexion()->prepare('SELECT id_chocoblast, slogan_chocoblast, date_chocoblast, cible_chocoblast, auteur_chocoblast FROM chocoblast');
+                $req = $this->connexion()->prepare('SELECT id_chocoblast, slogan_chocoblast, date_chocoblast, auteur.nom_utilisateur AS nom_auteur, 
+                auteur.prenom_utilisateur AS prenom_auteur, cible.nom_utilisateur AS nom_cible, 
+                cible.prenom_utilisateur AS prenom_cible FROM chocoblast 
+                INNER JOIN utilisateur AS cible ON cible_chocoblast = cible.id_utilisateur
+                INNER JOIN utilisateur AS auteur ON auteur_chocoblast = auteur.id_utilisateur;');
 
                 $req->execute();
 

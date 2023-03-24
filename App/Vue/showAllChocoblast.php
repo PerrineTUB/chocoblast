@@ -10,6 +10,20 @@
 <body>
     <!-- Import du menu -->
     <?php include './App/Vue/vueMenu.php'; ?>
+    <div>
+        <?php
+        foreach($chocos as $value){
+            echo'<div class ="choco">
+            <h3>'.$value->slogan_chocoblast.'</h3>
+            <p>'.$value->date_chocoblast.'</p>
+            <p>'.$value->prenom_auteur.'</p>
+            <p>'.$value->nom_auteur.'</p>
+            <p>'.$value->prenom_cible.'</p>
+            <p>'.$value->nom_cible.'</p>
+            </div>';
+        }
+        ?>
+    </div>
     
 </body>
 </html>
