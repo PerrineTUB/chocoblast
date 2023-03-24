@@ -59,6 +59,46 @@
             include './App/Vue/viewAddUser.php';
         }
 
+        public function connexionUser(){
+            $msg = '';
+            if(isset($_POST['submit'])){
+                $mail = Fonctions::cleanInput($_POST['mail_utilisateur']);
+                $password = Fonctions::cleanInput($_POST['password_utilisateur']);
+
+                if(!empty($mail) AND !empty($password)){
+                    
+                    $this->setMailUtilisateur($mail);
+                    $this->setPasswordUtilisateur($password);
+
+                    if($this->getUserByMail()){
+                        $data = $this->getUserByMail();
+                        if(password_verify($password, $data[0]->password_utilisateur)){
+                            $_SESSION['connected'] = true;
+                            $_SESSION['mail'] = $data[0]->mail_utilisateur;
+                            $_SESSION['id'] =$data[0]->id_utilisateur;
+                            $_SESSION['nom']= $data[0]->nom_utilisateur;
+                            $_SESSION['prenom'] =$data[0]->prenom_utilisateur;
+                            $msg ='connecté';
+                        }
+                        else {
+                            $msg = "Le mail ou le mot de passe ne correspond pas.";
+                        }
+                    }
+                }
+                else{
+                    $msg = "Veuillez remplir tous les champs du formulaire";
+                }
+            }
+            include './App/Vue/vueConnexion.php';
+        }
+
+        public function deconnexionUser(){
+            //tue la session
+            session_destroy();
+            //redirection page d'accueil
+            header('Location: ./');
+        }
+
     }
 
 ?>
