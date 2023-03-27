@@ -48,6 +48,7 @@
                             $this->setNomUtilisateur($nom);
                             $this->setPrenomUtilisateur($prenom);
                             $this->setPasswordUtilisateur($password);
+                            $this->setImageUtilisateur('Public/Image/'.$image);
                             //ajout du compte en BDD
                             $this->addUser();
                             //affichage de l'erreur
@@ -61,7 +62,7 @@
                     
                     } 
                     else{
-                        $image = './Public/Image/user_default.png';
+                        $image = 'Public/Image/user_default.png';
                     }
                     
                 }
