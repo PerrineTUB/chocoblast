@@ -46,3 +46,9 @@ input, label, h3{
     font-size: 1.3em;
     margin: 5px;
 }
+
+.choco{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
