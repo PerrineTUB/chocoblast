@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,9 +8,8 @@
     <title>Home</title>
 </head>
 <body>
-    <?php
-    include './App/Vue/vueMenu.php';
-    ?>
-    <h1>Bienvenue dans chocoblast</h1>
+    <!--import du menu -->
+    <?php include './App/Vue/viewMenu.php';?>
+    <h1>Bienvenue sur Chocoblast</h1>
 </body>
 </html>

@@ -1,104 +1,132 @@
 <?php
-//Gérer toute la logique, appel aux fonctions pour ajouter en BDD
-    //Ou se situe le projet 
-    namespace App\controller;
-
-    //Ou se situe la classe utilisateur et la classe fonctions
+    namespace App\Controller;
     use App\Model\Utilisateur;
     use App\Utils\Fonctions;
-
     class UserController extends Utilisateur{
-        //Fonction qui va gérer l'ajout d'un utilisateur en BDD
+        //fonction qui va gérer l'ajout d'un utilisateur en BDD
         public function insertUser(){
-            // Variable pour stocker des messages d'erreur
-            $msg = ""; 
-            //Tester si le bouton est cliqué
+            //variable pour stocker les messages d'erreurs
+            $msg = "";
+            /*-------------------------------
+                        logique 
+            --------------------------------*/
+            //test si le bouton est cliqué 
             if(isset($_POST['submit'])){
+                //récupération et nettoyage des inputs utilisateurs
                 $nom = Fonctions::cleanInput($_POST['nom_utilisateur']);
                 $prenom = Fonctions::cleanInput($_POST['prenom_utilisateur']);
                 $mail = Fonctions::cleanInput($_POST['mail_utilisateur']);
                 $password = Fonctions::cleanInput($_POST['password_utilisateur']);
-                //Tester si les champs sont remplis
-                if(!empty($nom) AND !empty($prenom) AND !empty($mail) AND !empty($password)){
-                    
-                    //Récupérer le mail dans un objet
-                    $this->setMailUtilisateur($mail); 
-
-                    //Tester si le compte existe déjà
-                    if($this->getUserByMail()){
-                        $msg = "L'identifiant ou le mot de passe sont incorrects";
-                    } else {
-                        //$user = new Utilisateur();
-
-                    //Hash du mot de passe
-                    $password = password_hash($password, PASSWORD_DEFAULT);
-
-                    /* Instance d'un objet 
-                    $user->setNomUtilisateur($nom);
-                    $user->setPrenomUtilisateur($prenom);
-                    $user->setMailUtilisateur($mail);
-                    $user->setPasswordUtilisateur($password);
-                    var_dump($user);
-                    $user->addUser();
-                    */
-
-                    //$this correspond à UserController et Utilisateur en utilisant les getter et les setter puisque les attribut dans la classe User sont en private
-                    $this->setNomUtilisateur($nom);
-                    $this->setPrenomUtilisateur($prenom);
-                    $this->setPasswordUtilisateur($password);
-
-                    //var_dump($this);
-                    $this->addUser();
-                    $msg = "<br>Le compte : ".$mail." a été ajouté en BDD.";
-                    }
-                } else {
-                    $msg = "Veuillez remplir tous les champs du formulaire";
-                }
-            }
-            //Importer la vue
-            include './App/Vue/viewAddUser.php';
-        }
-
-        public function connexionUser(){
-            $msg = '';
-            if(isset($_POST['submit'])){
-                $mail = Fonctions::cleanInput($_POST['mail_utilisateur']);
-                $password = Fonctions::cleanInput($_POST['password_utilisateur']);
-
-                if(!empty($mail) AND !empty($password)){
-                    
+                //tester si les champs sont remplis
+                if(!empty($nom) AND !empty($prenom)AND !empty($mail) AND !empty($password)){
+                    //récupérer le mail dans un objet
                     $this->setMailUtilisateur($mail);
-                    $this->setPasswordUtilisateur($password);
-
+                    //tester si le compte existe déja
                     if($this->getUserByMail()){
-                        $data = $this->getUserByMail();
-                        if(password_verify($password, $data[0]->password_utilisateur)){
-                            $_SESSION['connected'] = true;
-                            $_SESSION['mail'] = $data[0]->mail_utilisateur;
-                            $_SESSION['id'] =$data[0]->id_utilisateur;
-                            $_SESSION['nom']= $data[0]->nom_utilisateur;
-                            $_SESSION['prenom'] =$data[0]->prenom_utilisateur;
-                            $msg ='connecté';
-                        }
-                        else {
-                            $msg = "Le mail ou le mot de passe ne correspond pas.";
-                        }
+                        $msg = "Les informations sont incorrectes";
+                        echo '<script>
+                            setTimeout(()=>{
+                                modal.style.display = "block";
+                            }, 500);
+                        </script>';
+                    }
+                    //test si le compte n'existe pas
+                    else{
+                        //hash du mot de passe
+                        $password = password_hash($password, PASSWORD_DEFAULT);
+                        //version alternative avec $this
+                        $this->setNomUtilisateur($nom);
+                        $this->setPrenomUtilisateur($prenom);
+                        $this->setPasswordUtilisateur($password);
+                        //ajout du compte en BDD
+                        $this->addUser();
+                        //affichage de l'erreur
+                        $msg = "Le compte : ".$mail." a été ajouté en BDD";
+                        echo '<script>
+                            setTimeout(()=>{
+                                modal.style.display = "block";
+                            }, 500);
+                        </script>';
                     }
                 }
+                //sinon si les champs ne sont pas tous remplis
                 else{
                     $msg = "Veuillez remplir tous les champs du formulaire";
+                    echo '<script>
+                        setTimeout(()=>{
+                            modal.style.display = "block";
+                        }, 500);
+                    </script>';
                 }
             }
-            include './App/Vue/vueConnexion.php';
+            //importer la vue
+            include './App/Vue/viewAddUser.php';
         }
-
+        //Fonction pour se connecter au site
+        public function connexionUser(){
+            //variable pour stocker les messages d'erreurs
+            $msg = "";
+            //Tester si le formulaire est submit
+            if(isset($_POST['submit'])){
+                //Nettoyer les inputs utilisateur
+                $mail = Fonctions::cleanInput($_POST['mail_utilisateur']); 
+                $password = Fonctions::cleanInput($_POST['password_utilisateur']);
+                //Tester si les champs sont remplis
+                if(!empty($mail) AND !empty($password)){
+                    //Setter les valeurs à l'objet
+                    $this->setMailUtilisateur($mail);
+                    $this->setPasswordUtilisateur($password);
+                    //Stokage du compte si il existe
+                    $data = $this->getUserByMail();
+                    //Tester si le compte existe
+                    if($data){
+                        //Test si le mot de passe est valide
+                        if(password_verify($password, $data[0]->password_utilisateur)){
+                            //Créer les super globales de Session
+                            $_SESSION['connected'] = true;
+                            $_SESSION['nom'] = $data[0]->nom_utilisateur;
+                            $_SESSION['prenom'] = $data[0]->prenom_utilisateur;
+                            $_SESSION['mail'] = $data[0]->mail_utilisateur;
+                            $_SESSION['id'] = $data[0]->id_utilisateur;
+                        }
+                        //Test si le mot de passe est incorrect
+                        else{
+                            $msg = "Les informations de connexion sont invalides";
+                            echo '<script>
+                                setTimeout(()=>{
+                                    modal.style.display = "block";
+                                }, 500);
+                            </script>';
+                        }
+                    }
+                    //Test si le compte n'existe pas
+                    else{
+                        $msg = "Les informations de connexion sont invalides";
+                        echo '<script>
+                            setTimeout(()=>{
+                                modal.style.display = "block";
+                            }, 500);
+                        </script>';
+                    }
+                }
+                //Test les champs sont vides
+                else{
+                    $msg = "Veuillez remplir tous les champs de formulaire";
+                    echo '<script>
+                        setTimeout(()=>{
+                            modal.style.display = "block";
+                        }, 500);
+                    </script>';
+                } 
+            }
+            //import de la vue connexion
+            include './App/Vue/ViewConnexion.php';
+        }
         public function deconnexionUser(){
-            //tue la session
+            //Détruire la session
             session_destroy();
-            //redirection page d'accueil
+            //Rediriger vers la page d'accueil
             header('Location: ./');
-        }
-
+        } 
     }
-
 ?>

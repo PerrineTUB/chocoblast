@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,10 +8,8 @@
     <title>Page erreur</title>
 </head>
 <body>
-    <?php
-    include './App/Vue/vueMenu.php';
-    ?>
+    <!--import du menu -->
+    <?php include './App/Vue/viewMenu.php';?>
     <h1>Error 404 la page n'existe pas</h1>
-    <?php //phpinfo(); ?>
 </body>
 </html>
