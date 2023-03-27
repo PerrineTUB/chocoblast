@@ -1,8 +1,6 @@
 <?php
 namespace App\Controller;
 use App\Utils\Fonctions;
-use App\Model\Utilisateur;
-use App\Model\Chocoblast;
 use App\Model\Commentaire;
 
 class CommentaireController extends Commentaire{
@@ -11,30 +9,37 @@ class CommentaireController extends Commentaire{
         if(isset($_SESSION['connected'])){
             $msg = "";
             if(isset($_POST['submit'])){
-                $note = Fonctions::cleanInput($_POST['note_chocoblast']);
-                $text = Fonctions::cleanInput($_POST['text_chocoblast']);
-                $date = Fonctions::cleanInput($_POST['date_chocoblast']);
+                $note = Fonctions::cleanInput($_POST['note_commentaire']);
+                $text = Fonctions::cleanInput($_POST['text_commentaire']);
+                $date = Fonctions::cleanInput($_POST['date_commentaire']);
+                $auteur = Fonctions::cleanInput($_SESSION['id']);
+                $chocoblast = Fonctions::cleanInput($_GET['id_chocoblast']);
+                /*
 
-                $chocoblast = $_GET['id_chocoblast'];
-                $auteur = $_SESSION['id'];
-                
-                if(!empty($note) AND !empty($text) AND !empty($date)){
+                */
+                if(!empty($note) AND !empty($text) AND !empty($date) AND !empty($auteur) AND !empty($chocoblast)){
                     $this->setNoteCommentaire($note);
                     $this->setTextCommentaire($text);
                     $this->setdateCommentaire($date);
-                    $this->getChocoblastCommentaire()->setIdChocoblast($chocoblast);
                     $this->getAuteurCommentaire()->setIdUtilisateur($auteur);
+                    $this->getChocoblastCommentaire()->setIdChocoblast($chocoblast);
 
                     $this->addCommentaire();
+                    $msg = "Le commentaire".$chocoblast." à bien été ajouté en BDD.";
                 }
                 else {
                     $msg = "Veuillez remplir tous les champs du formulaire.";
+                    echo '<script>
+                            setTimeout(()=>{
+                                modal.style.display = "block";
+                            }, 500);
+                        </script>';
                 }
             }
         include './App/Vue/viewAddCommentaire.php';
         }
         else{
-            header('Location: ./');
+            header('Location: ./chocoblastAll');
         }
     }
 }

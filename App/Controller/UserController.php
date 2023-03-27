@@ -17,37 +17,53 @@
                 $prenom = Fonctions::cleanInput($_POST['prenom_utilisateur']);
                 $mail = Fonctions::cleanInput($_POST['mail_utilisateur']);
                 $password = Fonctions::cleanInput($_POST['password_utilisateur']);
+                
                 //tester si les champs sont remplis
                 if(!empty($nom) AND !empty($prenom)AND !empty($mail) AND !empty($password)){
-                    //récupérer le mail dans un objet
-                    $this->setMailUtilisateur($mail);
-                    //tester si le compte existe déja
-                    if($this->getUserByMail()){
-                        $msg = "Les informations sont incorrectes";
-                        echo '<script>
-                            setTimeout(()=>{
-                                modal.style.display = "block";
-                            }, 500);
-                        </script>';
-                    }
-                    //test si le compte n'existe pas
+                    //Tester si l'utilisateur à importé une image
+                    if(!empty($_FILES['image_utilisateur']['tmp_name'])){
+                        //Stocker le nom de l'image
+                        $image = $_FILES['image_utilisateur']['name'];
+                        //Stocker le nom temporaire (emplacement sur le serveur ou l'image va être déplacée en provisoire)
+                        $temp = $_FILES['image_utilisateur']['tmp_name'];
+                        //Déplacer l'image sur le serveur
+                        $fichier = move_uploaded_file($temp, './Public/Image/'.$image.'');
+                        
+                        //récupérer le mail dans un objet
+                        $this->setMailUtilisateur($mail);
+                        //tester si le compte existe déja
+                        if($this->getUserByMail()){
+                            $msg = "Les informations sont incorrectes";
+                            echo '<script>
+                                setTimeout(()=>{
+                                    modal.style.display = "block";
+                                }, 500);
+                            </script>';
+                        }
+                        //test si le compte n'existe pas
+                        else{
+                            //hash du mot de passe
+                            $password = password_hash($password, PASSWORD_DEFAULT);
+                            //version alternative avec $this
+                            $this->setNomUtilisateur($nom);
+                            $this->setPrenomUtilisateur($prenom);
+                            $this->setPasswordUtilisateur($password);
+                            //ajout du compte en BDD
+                            $this->addUser();
+                            //affichage de l'erreur
+                            $msg = "Le compte : ".$mail." a été ajouté en BDD";
+                            echo '<script>
+                                setTimeout(()=>{
+                                    modal.style.display = "block";
+                                }, 500);
+                            </script>';
+                        }
+                    
+                    } 
                     else{
-                        //hash du mot de passe
-                        $password = password_hash($password, PASSWORD_DEFAULT);
-                        //version alternative avec $this
-                        $this->setNomUtilisateur($nom);
-                        $this->setPrenomUtilisateur($prenom);
-                        $this->setPasswordUtilisateur($password);
-                        //ajout du compte en BDD
-                        $this->addUser();
-                        //affichage de l'erreur
-                        $msg = "Le compte : ".$mail." a été ajouté en BDD";
-                        echo '<script>
-                            setTimeout(()=>{
-                                modal.style.display = "block";
-                            }, 500);
-                        </script>';
+                        $image = './Public/Image/user_default.png';
                     }
+                    
                 }
                 //sinon si les champs ne sont pas tous remplis
                 else{

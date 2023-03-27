@@ -13,17 +13,25 @@
     <section class="formContainer">
         <h3>Ajouter un commentaire :</h3>
         <form action="" method="post">
-            <label for="note_chocoblast">Donner la note: </label>
-            <input type="text" name="note_chocoblast">
+            <label for="note_commentaire">Donner la note: </label>
+            <input type="text" name="note_commentaire">
 
-            <label for="text_chocoblast">Contenu du commentaire :</label>
-            <input type="text" name="text_chocoblast">
+            <label for="text_commentaire">Contenu du commentaire :</label>
+            <input type="text" name="text_commentaire">
 
-            <label for="date_chocoblast">Sélectionner la date :</label>
-            <input type="date" name="date_chocoblast">
+            <label for="date_commentaire">Sélectionner la date :</label>
+            <input type="date" name="date_commentaire">
 
             <input type="submit" value="Ajouter" name="submit">
         </form>
     </section>
+
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p><?= $msg ?></p>
+        </div>
+    </div>
 </body>
 </html>

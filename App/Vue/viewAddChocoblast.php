@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +9,6 @@
     <title>Add Chocoblast</title>
 </head>
 <body>
-    <!-- Import du menu -->
     <?php include './App/Vue/viewMenu.php'; ?>
     <section class="formContainer">
         <h3>Ajouter un chocoblast :</h3>
